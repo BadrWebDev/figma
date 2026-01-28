@@ -1,0 +1,30 @@
+/* Add this at the very end of your index.css file for additional responsive breakpoints */
+
+/* Better desktop responsiveness */
+@media (max-width: 1600px) {
+    .content-grid {
+        grid-template-columns: 1fr 340px !important;
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)) !important;
+    }
+}
+
+@media (max-width: 1200px) {
+    .stats-grid {
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)) !important;
+    }
+
+    .page-header {
+        padding: var(--spacing-lg) var(--spacing-xl) !important;
+    }
+
+    .content-grid {
+        padding: 0 var(--spacing-lg) var(--spacing-lg) !important;
+    }
+
+    .step {
+        min-width: 120px !important;
+    }
+}
