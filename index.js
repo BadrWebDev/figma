@@ -1,134 +1,9 @@
-// Sample client data
-const clientsData = [
-    {
-        id: 1,
-        name: "Cabinet Dentaire Sourire",
-        contact: "Dr. Sophie Martin",
-        email: "s.martin@sourire.fr",
-        commercial: "Jean Dupont",
-        status: "prospect",
-        lastVisit: "2026-01-25"
-    },
-    {
-        id: 2,
-        name: "Clinique Dent Blanche",
-        contact: "Dr. Marc Bernard",
-        email: "m.bernard@dentblanche.fr",
-        commercial: "Marie Laurent",
-        status: "negociation",
-        lastVisit: "2026-01-24"
-    },
-    {
-        id: 3,
-        name: "Cabinet Santé Plus",
-        contact: "Dr. Julie Rousseau",
-        email: "j.rousseau@santeplus.fr",
-        commercial: "Pierre Martin",
-        status: "contact",
-        lastVisit: "2026-01-26"
-    },
-    {
-        id: 4,
-        name: "Dentiste Moderne",
-        contact: "Dr. Thomas Petit",
-        email: "t.petit@modernd.fr",
-        commercial: "Sophie Dubois",
-        status: "approved",
-        lastVisit: "2026-01-20"
-    },
-    {
-        id: 5,
-        name: "Clinique du Sourire",
-        contact: "Dr. Anne Moreau",
-        email: "a.moreau@sourire.fr",
-        commercial: "Luc Simon",
-        status: "prospect",
-        lastVisit: "2026-01-27"
-    },
-    {
-        id: 6,
-        name: "Cabinet Dentaire Central",
-        contact: "Dr. Paul Laurent",
-        email: "p.laurent@central.fr",
-        commercial: "Emma Leroy",
-        status: "approved",
-        lastVisit: "2026-01-18"
-    },
-    {
-        id: 7,
-        name: "Espace Dentaire Pro",
-        contact: "Dr. Claire Dubois",
-        email: "c.dubois@espacepro.fr",
-        commercial: "Nicolas Roux",
-        status: "contact",
-        lastVisit: "2026-01-23"
-    },
-    {
-        id: 8,
-        name: "Cabinet Dentaire Excellence",
-        contact: "Dr. Michel Fontaine",
-        email: "m.fontaine@excellence.fr",
-        commercial: "Julie Garcia",
-        status: "negociation",
-        lastVisit: "2026-01-22"
-    },
-    {
-        id: 9,
-        name: "Clinique Bleue",
-        contact: "Dr. Laurent Blanc",
-        email: "l.blanc@bleue.fr",
-        commercial: "Jean Dupont",
-        status: "prospect",
-        lastVisit: "2026-01-21"
-    },
-    {
-        id: 10,
-        name: "Cabinet Moderne Plus",
-        contact: "Dr. Sarah Lefevre",
-        email: "s.lefevre@moderne.fr",
-        commercial: "Marie Laurent",
-        status: "contact",
-        lastVisit: "2026-01-20"
-    },
-    {
-        id: 11,
-        name: "Dentiste Pro Elite",
-        contact: "Dr. Antoine Roussel",
-        email: "a.roussel@elite.fr",
-        commercial: "Pierre Martin",
-        status: "approved",
-        lastVisit: "2026-01-19"
-    },
-    {
-        id: 12,
-        name: "Clinique Santé Dentaire",
-        contact: "Dr. Marie Dupuis",
-        email: "m.dupuis@sante.fr",
-        commercial: "Sophie Dubois",
-        status: "negociation",
-        lastVisit: "2026-01-18"
-    }
-];
+// Sample client data - keeping for potential future use
+// (Currently not displayed in the simplified pipeline view)
 
-// Track current filter and visible count
+
+// Track current filter
 let currentFilter = null;
-let visibleCount = { prospect: 4, contact: 4, negociation: 4, approved: 4 };
-
-// Render clients under each step
-function renderStepClients(status, limit = 4) {
-    const container = document.getElementById(`clients-${status}`);
-    if (!container) return;
-
-    const filteredClients = clientsData.filter(client => client.status === status);
-    const displayClients = filteredClients.slice(0, limit);
-
-    container.innerHTML = displayClients.map(client => `
-        <div class="client-item">
-            <span class="client-item-name">${client.name}</span>
-            <span class="client-item-contact">${client.contact}</span>
-        </div>
-    `).join('');
-}
 
 // Update all steps based on filter
 function updateStepDisplay(activeStatus = null) {
@@ -153,153 +28,138 @@ function updateStepDisplay(activeStatus = null) {
     });
 }
 
+
 // Initialize charts
 function initCharts() {
-    // Pie Chart - Status Distribution
-    const statusCtx = document.getElementById('statusChart').getContext('2d');
+    // Customer Habits Chart (Bar Chart) - Re-purposed for Activity/Visits
+    const habitsCtx = document.getElementById('customerHabitsChart').getContext('2d');
 
-    new Chart(statusCtx, {
-        type: 'doughnut',
-        data: {
-            labels: ['Prospects', 'Premier Contact', 'Négociation', 'Clôture', 'Approuvés'],
-            datasets: [{
-                data: [1247, 385, 234, 156, 892],
-                backgroundColor: [
-                    '#667eea',
-                    '#f093fb',
-                    '#4facfe',
-                    '#fa709a',
-                    '#30cfd0'
-                ],
-                borderWidth: 0,
-                spacing: 4
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: true,
-            plugins: {
-                legend: {
-                    display: false
-                },
-                tooltip: {
-                    backgroundColor: 'rgba(255, 255, 255, 0.95)',
-                    titleColor: '#1a1a2e',
-                    bodyColor: '#6b7280',
-                    padding: 12,
-                    borderColor: 'rgba(0, 0, 0, 0.06)',
-                    borderWidth: 1,
-                    cornerRadius: 8,
-                    displayColors: true,
-                    callbacks: {
-                        label: function (context) {
-                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                            const percentage = ((context.parsed / total) * 100).toFixed(1);
-                            return ` ${context.label}: ${context.parsed} (${percentage}%)`;
-                        }
-                    }
-                }
-            },
-            cutout: '70%'
-        }
-    });
+    // Gradient for bars
+    const gradientPrimary = habitsCtx.createLinearGradient(0, 0, 0, 300);
+    gradientPrimary.addColorStop(0, '#667eea');
+    gradientPrimary.addColorStop(1, '#764ba2');
 
-    // Column Chart - Monthly Evolution
-    const monthlyCtx = document.getElementById('monthlyChart').getContext('2d');
-
-    new Chart(monthlyCtx, {
+    new Chart(habitsCtx, {
         type: 'bar',
         data: {
-            labels: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Aoû', 'Sep', 'Oct', 'Nov', 'Déc'],
+            labels: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil'],
             datasets: [
                 {
-                    label: 'Nouveaux Clients',
-                    data: [65, 78, 90, 81, 95, 102, 87, 94, 110, 99, 88, 76],
-                    backgroundColor: '#667eea',
-                    borderRadius: 8,
-                    borderSkipped: false
+                    label: 'Prospects',
+                    data: [18, 25, 15, 30, 22, 35, 28],
+                    backgroundColor: '#e2e8f0', // Default light grey
+                    hoverBackgroundColor: '#667eea', // Hover color
+                    borderRadius: 4,
+                    barPercentage: 0.6,
+                    categoryPercentage: 0.7
                 },
                 {
-                    label: 'Prospects',
-                    data: [120, 135, 142, 128, 156, 148, 139, 162, 175, 158, 144, 132],
-                    backgroundColor: '#4facfe',
-                    borderRadius: 8,
-                    borderSkipped: false
+                    // Overlay for significant interactions (e.g. Sales/Contracts)
+                    label: 'Clients Confirmés',
+                    data: [12, 18, 10, 45, 15, 25, 20],
+                    backgroundColor: '#667eea', // Primary color
+                    borderRadius: 4,
+                    barPercentage: 0.6,
+                    categoryPercentage: 0.7,
+                    hidden: false
                 }
             ]
         },
         options: {
             responsive: true,
-            maintainAspectRatio: true,
+            maintainAspectRatio: false,
             plugins: {
                 legend: {
                     display: true,
                     position: 'top',
+                    align: 'start',
                     labels: {
-                        color: '#6b7280',
-                        padding: 20,
-                        font: {
-                            size: 12,
-                            weight: '600'
-                        },
                         usePointStyle: true,
-                        pointStyle: 'circle'
+                        pointStyle: 'circle',
+                        padding: 20,
+                        color: '#a0aec0',
+                        font: { size: 11 }
                     }
                 },
                 tooltip: {
-                    backgroundColor: 'rgba(255, 255, 255, 0.95)',
-                    titleColor: '#1a1a2e',
-                    bodyColor: '#6b7280',
+                    backgroundColor: '#1a1a2e',
                     padding: 12,
-                    borderColor: 'rgba(0, 0, 0, 0.06)',
-                    borderWidth: 1,
                     cornerRadius: 8,
-                    displayColors: true
+                    displayColors: true,
+                    titleColor: '#fff',
+                    bodyColor: '#a0aec0'
                 }
             },
             scales: {
-                x: {
+                y: {
+                    beginAtZero: true,
                     grid: {
-                        display: false,
-                        drawBorder: false
+                        color: '#f7fafc',
+                        drawBorder: false,
+                        borderDash: [5, 5]
                     },
                     ticks: {
-                        color: '#9ca3af',
-                        font: {
-                            size: 11,
-                            weight: '600'
-                        }
+                        color: '#a0aec0',
+                        font: { size: 10 }
                     }
                 },
-                y: {
+                x: {
                     grid: {
-                        color: 'rgba(0, 0, 0, 0.05)',
-                        drawBorder: false
+                        display: false
                     },
                     ticks: {
-                        color: '#9ca3af',
-                        font: {
-                            size: 11,
-                            weight: '600'
-                        }
-                    },
-                    beginAtZero: true
+                        color: '#a0aec0',
+                        font: { size: 10 }
+                    }
                 }
             }
         }
     });
+
+    // Product Stats Chart (Doughnut) - Re-purposed for Status Distribution
+    const productCtx = document.getElementById('productStatsChart').getContext('2d');
+
+    new Chart(productCtx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Prospects', 'Contact', 'Approuvés', 'Divers'],
+            datasets: [{
+                data: [42, 13, 31, 14], // Matches the visual approximation of the CRM data percentages
+                backgroundColor: [
+                    '#667eea', // Prospects - Blue like Electronic
+                    '#f5576c', // Contact - Pink like Games
+                    '#30cfd0', // Approuvés - Teal/Green
+                    '#e2e8f0'  // Others - Grey
+                ],
+                borderWidth: 0,
+                spacing: 5,
+                borderRadius: 20,
+                cutout: '85%'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false // Using custom legend in HTML
+                },
+                tooltip: {
+                    enabled: false
+                }
+            },
+            rotation: -90,
+            circumference: 270, // Full circle with a gap at the bottom
+        }
+    });
 }
+
 
 // Event listeners
 document.addEventListener('DOMContentLoaded', () => {
-    // Render initial clients for all steps
-    renderStepClients('prospect');
-    renderStepClients('contact');
-    renderStepClients('negociation');
-    renderStepClients('approved');
-
     // Initialize charts
     initCharts();
+
 
     // Step click handlers
     const steps = document.querySelectorAll('.step');
@@ -311,12 +171,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Clicking the same step again - reset filter
                 currentFilter = null;
                 updateStepDisplay(null);
-                // Reset all to show 4 clients
-                visibleCount = { prospect: 4, contact: 4, negociation: 4, approved: 4 };
-                renderStepClients('prospect', 4);
-                renderStepClients('contact', 4);
-                renderStepClients('negociation', 4);
-                renderStepClients('approved', 4);
             } else {
                 // Set new filter
                 currentFilter = status;
@@ -325,23 +179,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Show more button
-    const showMoreBtn = document.getElementById('show-more');
-    if (showMoreBtn) {
-        showMoreBtn.addEventListener('click', () => {
-            if (currentFilter) {
-                // Load more for the active filter
-                visibleCount[currentFilter] += 4;
-                renderStepClients(currentFilter, visibleCount[currentFilter]);
-            } else {
-                // Load more for all
-                Object.keys(visibleCount).forEach(status => {
-                    visibleCount[status] += 4;
-                    renderStepClients(status, visibleCount[status]);
-                });
-            }
-        });
-    }
+
+
 
     // Navigation items
     const navItems = document.querySelectorAll('.nav-item');
